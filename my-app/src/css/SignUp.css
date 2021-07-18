@@ -1,0 +1,86 @@
+.signUp {
+  max-width: 300px;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.signUp > form > h1 {
+  text-align: left;
+  margin-bottom: 25px;
+}
+
+.signUp > form {
+  display: grid;
+  flex-direction: column;
+}
+
+.signUp > form > input {
+  outline-width: 0;
+  height: 40px;
+  margin-bottom: 14px;
+  border-radius: 5x;
+  border: none;
+  padding: 5px 15px;
+}
+
+.signUp > form > button {
+  padding: 16px 20px;
+  font-size: 1rem;
+  color: #fff;
+  border-radius: 5px;
+  background-color: #e50914;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.signUp__modal {
+  margin: auto !important;
+  width: 50%;
+  height: 449px;
+  background-color: #181818;
+  border: none;
+  border-radius: 10px !important;
+  top: 0;
+  outline: none;
+}
+
+.modal__logo {
+  outline: none;
+}
+
+.modal__logo {
+  margin-top: -55px;
+  object-fit: contain;
+  height: 25%;
+  width: 100%;
+  outline: none;
+}
+
+.row__modalHeader {
+  position: relative;
+  height: 448px;
+  color: white;
+  object-fit: contain;
+  border: none;
+  outline: none;
+}
+
+.modal--fadeButton {
+  height: 7.4rem;
+  background-image: linear-gradient(
+    180deg,
+    transparent,
+    rgba(37, 37, 37, 0.61),
+    #111
+  );
+}
+
+.modal__content {
+  margin-left: 30px;
+  padding-top: 140px;
+  height: 190px;
+}

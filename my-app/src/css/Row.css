@@ -39,8 +39,8 @@
 
 .row__modal {
   margin: auto;
-  width: 82%;
-  height: 449px;
+  max-width: 82%;
+  max-height: 449px;
   background-color: #181818;
   border: none;
   border-radius: 10px !important;
@@ -51,6 +51,7 @@
 .row__modalHeader {
   position: relative;
   height: 448px;
+  /* height: 90%; */
   color: white;
   object-fit: contain;
   border: none;

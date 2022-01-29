@@ -5,7 +5,8 @@ import Modal from "@material-ui/core/Modal";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import ThumbUpAltOutlinedIcon from "@material-ui/icons/ThumbUpAltOutlined";
 import ThumbDownAltOutlinedIcon from "@material-ui/icons/ThumbDownAltOutlined";
-import { YouTube } from "@material-ui/icons";
+import YouTube from "react-youtube";
+import movieTrailer from "movie-trailer";
 
 function Row({ title, fetchUrl, isLargeRow = false }) {
   const [movies, setMovies] = useState([]);
@@ -15,6 +16,8 @@ function Row({ title, fetchUrl, isLargeRow = false }) {
   const [modalDescription, setModalDescription] = useState("");
   const [trailerUrl, setTrailerUrl] = useState("");
   const [movieName, setMovieName] = useState();
+  const [playVideo, setPlayVideo] = useState(false);
+  const [videoCutOption, setVideoCutOption] = useState(false);
 
   const base_url = "https://image.tmdb.org/t/p/original/";
 
@@ -36,14 +39,33 @@ function Row({ title, fetchUrl, isLargeRow = false }) {
     setModalBanner(
       `${base_url}${isLargeRow ? movie.poster_path : movie.backdrop_path}`
     );
-    setModalTitle(movie.name);
+    setModalTitle(movie.name || movie.title);
     setModalDescription(movie?.overview);
+    console.log(movie.name);
     // setMovieName(
     //   (movie?.name || "").then((url) => {
     //     const urlParams
     //   }).catch((error) => console.log(error))
     // );
+
+    // console.log(movie.name);
+    // movieTrailer(movie?.name || "")
+    if (trailerUrl) {
+      setTrailerUrl("");
+    } else {
+      movieTrailer(movie.name || movie.title)
+        // movieTrailer("Arcane")
+        .then((url) => {
+          const urlParams = new URLSearchParams(new URL(url).search);
+          setTrailerUrl(urlParams.get("v"));
+          // console.log("THis is the respomnse", url);
+          // // console.log(url);
+          // console.log(trailerUrl);
+        })
+        .catch((err) => console.log("this is the error", err));
+    }
   };
+
   const opts = {
     height: "449",
     width: "82%",
@@ -62,7 +84,9 @@ function Row({ title, fetchUrl, isLargeRow = false }) {
 
   const handleClose = () => {
     setOpen(false);
+    setPlayVideo(false);
   };
+
   return (
     <div className="row">
       <h2> {title} </h2>
@@ -84,36 +108,46 @@ function Row({ title, fetchUrl, isLargeRow = false }) {
             )
         )}
         <Modal className="row__modal" open={open} onClose={handleClose}>
-          <header
-            className="row__modalHeader"
-            style={{
-              backgroundSize: "cover",
-              backgroundImage: `url(${modalBanner})`,
-              backgroundPosition: "center center",
-            }}
-          >
-            <div className="row__modalHeaderContents">
-              <h1 className="row__modalHeaderTitle"> {modalTtle} </h1>
-              <div className="banner__buttons">
-                <button
-                  // onClick={() => playVideo(movies)}
-                  className="banner__button"
-                >
-                  Play
-                </button>
-                <AddCircleOutlineOutlinedIcon className="row__modalMuiButton" />
-                <ThumbUpAltOutlinedIcon className="row__modalMuiButton" />
-                <ThumbDownAltOutlinedIcon className="row__modalMuiButton" />
-              </div>
-              <h1 className="row__modalDescription">
-                {truncate(modalDescription, 120)}
-              </h1>
+          {playVideo ? (
+            <div style={{ marginLeft: "15%" }}>
+              <YouTube
+                onPause={() => setVideoCutOption(true)}
+                videoId={trailerUrl}
+                onEnd={() => setPlayVideo(false)}
+                opts={opts}
+              />
             </div>
-            <div className="modal--fadeButton" />
-          </header>
+          ) : (
+            <header
+              className="row__modalHeader"
+              style={{
+                backgroundSize: "cover",
+                backgroundImage: `url(${modalBanner})`,
+                backgroundPosition: "center center",
+              }}
+            >
+              <div className="row__modalHeaderContents">
+                <h1 className="row__modalHeaderTitle"> {modalTtle} </h1>
+                <div className="banner__buttons">
+                  <button
+                    onClick={() => setPlayVideo(true)}
+                    className="banner__button"
+                  >
+                    Play
+                  </button>
+                  <AddCircleOutlineOutlinedIcon className="row__modalMuiButton" />
+                  <ThumbUpAltOutlinedIcon className="row__modalMuiButton" />
+                  <ThumbDownAltOutlinedIcon className="row__modalMuiButton" />
+                </div>
+                <h1 className="row__modalDescription">
+                  {truncate(modalDescription, 120)}
+                </h1>
+              </div>
+              <div className="modal--fadeButton" />
+            </header>
+          )}
         </Modal>
       </div>
-      {trailerUrl && <YouTube videoId={trailerUrl} opts={opts} />}
     </div>
   );
 }
